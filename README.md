@@ -1,3 +1,4 @@
 # terraform drafts
-#### The project whose purpose was to create drafts for deployingautomated environments IasC mainly for AWS cloud and also docker, using Terraform.
+#### The project whose purpose was to create drafts for deploying automated environments Infrastructure as a service mainly for AWS cloud and  Docker, using Terraform.
 
+# usage 
