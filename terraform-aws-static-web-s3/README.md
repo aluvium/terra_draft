@@ -1,1 +1,2 @@
-aws provider
+### aws provider
+### For static web in bucket
