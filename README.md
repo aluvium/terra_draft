@@ -5,4 +5,4 @@
 ### Usage 
 
 ### Contributions
-https://learn.hashicorp.com/tutorials/
+https://learn.hashicorp.com
