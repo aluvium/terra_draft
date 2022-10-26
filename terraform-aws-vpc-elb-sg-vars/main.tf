@@ -7,29 +7,28 @@ terraform {
 }
 
 provider "aws" {
-  region  = "eu-east-1"
+  region  = var.aws_region
 }
-
 data "aws_availability_zones" "available" {
   state = "available"
 }
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "3.16.0"
-  cidr = "var.vpc_cidr_block"
+  version = "2.64.0"
+  cidr = var.vpc_cidr_block
   azs             = data.aws_availability_zones.available.names
-  private_subnets = slice(var.private_subnet_cidr_blocks,0,var.private_subnet_count)
-  public_subnets  = slice(var.public_subnet_cidr_blocks,0,var.public_subnet_count)
+  private_subnets = slice(var.private_subnets_cidr_blocks, 0, var.private_subnet_count)
+  public_subnets  = slice(var.public_subnets_cidr_blocks, 0 , var.public_subnet_count)
   enable_nat_gateway = true
-  enable_vpn_gateway = var.enable_vpn_gateway 
+  enable_vpn_gateway = var.enable_vpn_gateway
   tags = var.resource_tags
 }
 
 module "app_security_group" {
   source  = "terraform-aws-modules/security-group/aws//modules/web"
-  version = "4.0.0"
-  name        = "web-sg-${var.resource_tags["project"]}"
+  version = "3.17.0"
+  name        = "app-sg-${var.resource_tags["project"]}-${var.resource_tags["enviroment"]}"
   description = "Security group for web-servers with HTTP ports open within VPC"
   vpc_id      = module.vpc.vpc_id
   ingress_cidr_blocks = module.vpc.public_subnets_cidr_blocks
@@ -38,8 +37,8 @@ module "app_security_group" {
 
 module "lb_security_group" {
   source  = "terraform-aws-modules/security-group/aws//modules/web"
-  version = "4.0.0"
-  name        = "lb-sg-${var.resource_tags["project"]}"
+  version = "3.17.0"
+  name        = "lb-sg-${var.resource_tags["project"]}-${var.resource_tags["enviroment"]}"
   description = "Security group for load balancer with HTTP ports open within VPC"
   vpc_id      = module.vpc.vpc_id
   ingress_cidr_blocks = ["0.0.0.0/0"]
@@ -51,12 +50,12 @@ resource "random_string" "lb_id" {
   special = false
 }
 
-module "aws_elb" {
+module "elb_http" {
   source  = "terraform-aws-modules/elb/aws"
-  version = "3.0.0"
-  name = "lb-${random_string.lb_id.result}-${var.resource_tags["project"]}"
+  version = "2.4.0"
+  name = "lb-${random_string.lb_id.result}-project-alpha-dev"
   internal = false
-  security_groups = ["lb-sg-${var.resource_tags["project"]}"]
+  security_groups = [module.lb_security_group.this_security_group_id]
   subnets         = module.vpc.public_subnets
   number_of_instances = length(module.ec2_instances.instance_ids)
   instances           = module.ec2_instances.instance_ids
@@ -81,6 +80,6 @@ module "ec2_instances" {
   instance_count     = var.instance_count
   instance_type      = var.ec2_instance_type
   subnet_ids         = module.vpc.private_subnets[*]
-  security_group_ids = ["web-sg-${var.resource_tags["project"]}"]
+  security_group_ids = [module.app_security_group.this_security_group_id]
   tags = var.resource_tags
 }
