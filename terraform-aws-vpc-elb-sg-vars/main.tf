@@ -15,7 +15,7 @@ data "aws_availability_zones" "available" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.64.0"
+  version = "3.16.0"
   cidr = var.vpc_cidr_block
   azs             = data.aws_availability_zones.available.names
   private_subnets = slice(var.private_subnets_cidr_blocks, 0, var.private_subnet_count)
@@ -52,7 +52,7 @@ resource "random_string" "lb_id" {
 
 module "elb_http" {
   source  = "terraform-aws-modules/elb/aws"
-  version = "2.4.0"
+  version = "3.0.0"
   name = "lb-${random_string.lb_id.result}-project-alpha-dev"
   internal = false
   security_groups = [module.lb_security_group.this_security_group_id]
