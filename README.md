@@ -16,6 +16,7 @@ With purpose to create drafts for deploying automated environments IaaC mainly f
 * [__terraform-aws-vpc-elb-sg-vars__](https://github.com/aluvium/terraform-drafts/tree/master/terraform-aws-vpc-elb-sg-vars) - VPC, app_security_group, lb_security_group, elb_http, -  took from terraform-aws-modules. Own module ec2_instances. Resources - random_string. Local creeds.
 * [__terraform-aws-vpc-lb-ec2-db__](https://github.com/aluvium/terraform-drafts/tree/master/terraform-aws-vpc-lb-ec2-db) - VPC, app_security_group, lb_security_group, elb_http, aws_db_subnet_group, aws_db_instance -  took from terraform-aws-modules.Own module ec2_instances. Resources - random_string. Local creeds.🪓 Optimalized, automated variables.
 - - - 
+- - - 
 ### Usage 
     git clone https://github.com/aluvium/terraform-drafts.git
     terraform init && terraform apply
