@@ -15,10 +15,10 @@ variable "vpc_cidr_block" {
   default     = "172.14.0.0/16"
 }
 
-variable "subnet_block" {
+variable "subnets_block" {
   description = "SUBNET BLOCK"
-  type        = string
-  default     = "172.14.0.0/20"
+  type        = list(string)
+  default     = ["172.14.0.0/20", "172.14.16.0/20"]
 }
 
 variable "map_public" {
