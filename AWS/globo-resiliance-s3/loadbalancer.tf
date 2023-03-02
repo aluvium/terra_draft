@@ -1,5 +1,5 @@
 # aws_elb_service_account
-
+data "aws_elb_service_account" "root" {}
 
 # aws_lb
 resource "aws_lb" "nginx" {
@@ -11,6 +11,12 @@ resource "aws_lb" "nginx" {
 
   enable_deletion_protection = false
   tags                       = local.common_tags
+
+  access_logs {
+    bucket  = aws_s3_bucket.web_bucket.bucket
+    prefix  = "alb-logs"
+    enabled = true
+  }
 }
 
 # aws_lb_target_group
